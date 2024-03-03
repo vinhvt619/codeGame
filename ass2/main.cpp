@@ -463,59 +463,59 @@ int main(int argc, char *argv[])
 					close = 1;
 				}
 				else if(event.key.keysym.sym == SDLK_w){
-					p1.y -= speed/10;
+					p1.y -= speed/5;
 				}
 				else if(event.key.keysym.sym == SDLK_UP){
-					p2.y -= speed/10;
+					p2.y -= speed/5;
 				}
 				else if(event.key.keysym.sym == SDLK_a){
-					p1.x -= speed/10;
+					p1.x -= speed/5;
 				}
 				else if(event.key.keysym.sym == SDLK_LEFT){
-					p2.x -= speed/10;
+					p2.x -= speed/5;
 				}
 				else if(event.key.keysym.sym == SDLK_s){
-					p1.y += speed/10;
+					p1.y += speed/5;
 				}
 				else if(event.key.keysym.sym == SDLK_DOWN){
-					p2.y += speed/10;
+					p2.y += speed/5;
 				}
 				else if(event.key.keysym.sym == SDLK_d){
-					p1.x += speed/10;
+					p1.x += speed/5;
 				}
 				else if(event.key.keysym.sym == SDLK_RIGHT){
-					p2.x += speed/10;
+					p2.x += speed/5;
 				}
 			}
-			else if(event.type == SDL_KEYUP){
-				if(event.key.keysym.sym == SDLK_ESCAPE){
-					close = 1;
-				}
-				else if(event.key.keysym.sym == SDLK_w){
-					p1.y -= speed/10;
-				}
-				else if(event.key.keysym.sym == SDLK_UP){
-					p2.y -= speed/10;
-				}
-				else if(event.key.keysym.sym == SDLK_a){
-					p1.x -= speed/10;
-				}
-				else if(event.key.keysym.sym == SDLK_LEFT){
-					p2.x -= speed/10;
-				}
-				else if(event.key.keysym.sym == SDLK_s){
-					p1.y += speed/10;
-				}
-				else if(event.key.keysym.sym == SDLK_DOWN){
-					p2.y += speed/10;
-				}
-				else if(event.key.keysym.sym == SDLK_d){
-					p1.x += speed/10;
-				}
-				else if(event.key.keysym.sym == SDLK_RIGHT){
-					p2.x += speed/10;
-				}
-			}
+			// else if(event.type == SDL_KEYUP){
+			// 	if(event.key.keysym.sym == SDLK_ESCAPE){
+			// 		close = 1;
+			// 	}
+			// 	else if(event.key.keysym.sym == SDLK_w){
+			// 		p1.y -= speed/5;
+			// 	}
+			// 	else if(event.key.keysym.sym == SDLK_UP){
+			// 		p2.y -= speed/5;
+			// 	}
+			// 	else if(event.key.keysym.sym == SDLK_a){
+			// 		p1.x -= speed/5;
+			// 	}
+			// 	else if(event.key.keysym.sym == SDLK_LEFT){
+			// 		p2.x -= speed/5;
+			// 	}
+			// 	else if(event.key.keysym.sym == SDLK_s){
+			// 		p1.y += speed/5;
+			// 	}
+			// 	else if(event.key.keysym.sym == SDLK_DOWN){
+			// 		p2.y += speed/5;
+			// 	}
+			// 	else if(event.key.keysym.sym == SDLK_d){
+			// 		p1.x += speed/5;
+			// 	}
+			// 	else if(event.key.keysym.sym == SDLK_RIGHT){
+			// 		p2.x += speed/5;
+			// 	}
+			// }
 			// switch (event.type) {
 
 			// case SDL_QUIT:
