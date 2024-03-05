@@ -220,32 +220,6 @@
 	// // your graphics hardware and sets flags
 	// Uint32 render_flags = SDL_RENDERER_ACCELERATED;
 
-class GameObject{
-public:
-	GameObject();
-	~GameObject();
-	void SetRect(const int& x, const int& y){
-        rect_.x = x;
-        rect_.y = y;
-    }
-    SDL_Rect GetRect() const { return rect_; }
-    SDL_Texture* GetObject() const { return p_object_; }
-	// // creates a renderer to render our images
-	// SDL_Renderer* rend = SDL_CreateRenderer(win, -1, render_flags);
-
-    bool loadImg(std::string path, SDL_Renderer* screen);
-    void Render(SDL_Renderer* des, const SDL_Rect* clip = NULL);
-    void Free();
-protected:;
-    SDL_Texture* p_object_;
-    SDL_Rect rect_;
-	// // creates a surface to load an image into the main memory
-	// SDL_Surface* surface;
-
-	// // please provide a path for your image
-	// surface = IMG_Load("image/white.png");
-
-};
 	// // loads image to our graphics hardware memory.
 	// SDL_Texture* tex = SDL_CreateTextureFromSurface(rend, surface);
 
