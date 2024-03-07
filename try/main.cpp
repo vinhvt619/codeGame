@@ -17,7 +17,7 @@ const int WINDOW_HEIGHT = 720;
 const float PLAYER_SPEED = 0.5f;
 const int PLAYER_WIDTH = 20;
 const int PLAYER_HEIGHT = 20;
-const float BALL_SPEED = 0.02f;
+const float BALL_SPEED = 0.01f;
 const int BALL_WIDTH = 15;
 const int BALL_HEIGHT = 15;
 
@@ -161,20 +161,76 @@ public:
 		SDL_RenderFillRect(renderer, &rect);
 	}
 
-	void CollideWithPlayer(Contact const& contact, Player player)
+	void CollideWithPlayer(Contact const& contact, Player const& player)
 	{
-		position.x += contact.penetration;
-		velocity.x = -velocity.x;
-
 		if (contact.type == CollisionType::Top)
 		{
-			velocity.y = -.75f * BALL_SPEED;
+			velocity.y = 0.0f;
+			float ballCenterY = rect.y + rect.w / 2;
+			float playerCenterY = player.rect.y + player.rect.h * 4;
 			
+			float penetrationY = ballCenterY - playerCenterY;
+			
+			// Thay đổi tốc độ của quả bóng dựa trên hướng va chạm
+			velocity.y += penetrationY * 0.024f;
 		}
 		else if (contact.type == CollisionType::Bottom)
 		{
-			velocity.y = 0.75f * BALL_SPEED;
+			velocity.y = 0.0f;
+			float ballCenterY = rect.y + rect.w / 2;
+			float playerCenterY = player.rect.y + player.rect.h * 4;
 			
+			float penetrationY = ballCenterY + playerCenterY;
+			
+			// Thay đổi tốc độ của quả bóng dựa trên hướng va chạm
+			velocity.y = velocity.y + penetrationY * 0.003f;
+		}
+		// else if (contact.type == CollisionType::Right)
+		// {
+			
+		// 	velocity.x = -BALL_SPEED;
+		// 	float ballCenterX = rect.x + rect.w / 2;
+		// 	float playerCenterX = player.rect.x + player.rect.h * 4;
+			
+		// 	float penetrationX = ballCenterX - playerCenterX;
+			
+		// 	//Thay đổi tốc độ của quả bóng dựa trên hướng va chạm
+		// 	velocity.x += penetrationX * 0.01f; // Tăng tốc độ theo hướng x
+		// }
+		// else if (contact.type == CollisionType::Left)
+		// {
+			
+		// 	velocity.x = -BALL_SPEED;
+		// 	float ballCenterX = rect.x + rect.w / 2;
+		// 	float playerCenterX = player.rect.x + player.rect.h * 4;
+			
+		// 	float penetrationX = ballCenterX - playerCenterX;
+			
+		// 	//Thay đổi tốc độ của quả bóng dựa trên hướng va chạm
+		// 	velocity.x += penetrationX * 0.01f; // Tăng tốc độ theo hướng x
+		// }
+		{
+			// Xử lý va chạm giữa người chơi và quả bóng
+			// Tính toán hướng và mức độ va chạm
+			// float ballCenterX = rect.x + rect.w / 2;
+			// float playerCenterX = player.rect.x + player.rect.h * 4;
+			
+			// float penetrationX = ballCenterX - playerCenterX;
+			
+			// // Thay đổi tốc độ của quả bóng dựa trên hướng va chạm
+			// velocity.x += penetrationX * 0.01f; // Tăng tốc độ theo hướng x
+			
+
+			// float ballCenterY = rect.y + rect.w / 2;
+			// float playerCenterY = player.rect.y + player.rect.h * 4;
+			
+			// float penetrationY = ballCenterY - playerCenterY;
+			
+			// // Thay đổi tốc độ của quả bóng dựa trên hướng va chạm
+			// velocity.y += penetrationY * 0.01f; // Tăng tốc độ theo hướng x
+			
+			// Có thể thay đổi hướng di chuyển của quả bóng tùy theo hướng va chạm
+			// Ví dụ: nếu va chạm từ phía trên hoặc dưới, thay đổi hướng di chuyển theo y
 		}
 	}
 
@@ -269,7 +325,7 @@ Contact CheckPlayerCollision(Ball const& ball, Player const& player)
 	float ballTop = ball.position.y;
 	float ballBottom = ball.position.y + BALL_HEIGHT;
 
-	float playerLeft = player.position.x;
+	float playerLeft = player.position.x ;
 	float playerRight = player.position.x + PLAYER_WIDTH;
 	float playerTop = player.position.y;
 	float playerBottom = player.position.y + PLAYER_HEIGHT;
@@ -315,8 +371,7 @@ Contact CheckPlayerCollision(Ball const& ball, Player const& player)
 	{
 		contact.type = CollisionType::Top;
 	}
-	else if ((ballBottom > playerRangeUpper)
-	         && (ballBottom < playerRangeMiddle))
+	else if (ball.position.x == WINDOW_WIDTH / 2.0f && ball.position.y == WINDOW_HEIGHT / 2.0f && ball.velocity.x == 0.0f && ball.velocity.y == 0.0f)
 	{
 		contact.type = CollisionType::Middle;
 	}
@@ -343,27 +398,49 @@ void HandlePlayerCollision(Player& player1, Player& player2)
 }
 
 
-void HandlePlayerBallCollision(Player& player, Ball& ball)
+void HandlePlayerBallCollision(Player& player, Ball& ball, int a)
 {
     if (SDL_HasIntersection(&player.rect, &ball.rect))
     {
         // Xử lý va chạm giữa người chơi và quả bóng
         // Tính toán hướng và mức độ va chạm
-        float ballCenterX = ball.rect.x + ball.rect.w / 2;
-        float playerCenterX = player.rect.x + player.rect.h *4;
         
-        float penetrationX = ballCenterX - playerCenterX;
-        
-        // Thay đổi tốc độ của quả bóng dựa trên hướng va chạm
-        ball.velocity.x += penetrationX * 0.01f; // Tăng tốc độ theo hướng x
+		// if(ball.velocity.x != 0){
+		// 	ball.velocity.y = -ball.velocity.y;
+	
+		// }
+		ball.velocity.x = BALL_SPEED;
+		if(a==1){
+			float ballCenterX = ball.rect.x + ball.rect.w / 2;
+			float playerCenterX = player.rect.x + player.rect.h * 4;
+			float penetrationX = ballCenterX + playerCenterX;
+			ball.velocity.x += penetrationX * 0.001f;
+			ball.velocity.x = 0.0f;
+			ball.velocity.y = 0.0f;
+		}
+		if(a==0){
+			float ballCenterX = ball.rect.x + ball.rect.w / 2;
+			float playerCenterX = player.rect.x + player.rect.h * 4;
+			float penetrationX = ballCenterX + playerCenterX;
+			ball.velocity.x += penetrationX * 0.001f;
+			ball.velocity.x = -ball.velocity.x;
+			
+		}
 
-		float ballCenterY = ball.rect.y + ball.rect.w / 2;
-        float playerCenterY = player.rect.y + player.rect.h *4;
-        
-        float penetrationY = ballCenterY - playerCenterY;
         
         // Thay đổi tốc độ của quả bóng dựa trên hướng va chạm
-        ball.velocity.y += penetrationY * 0.01f; // Tăng tốc độ theo hướng x
+        // ball.velocity.x += penetrationX * 0.01f; // Tăng tốc độ theo hướng x
+		// if(ball.velocity.x > 0 && player.velocity.x == 0){
+		// 	ball.velocity.x = -ball.velocity.x;
+		// }
+		// float ballCenterY = ball.rect.y + ball.rect.w / 2;
+        // float playerCenterY = player.rect.y + player.rect.h * 4;
+        
+        // float penetrationY = ballCenterY - playerCenterY;
+        
+        // // Thay đổi tốc độ của quả bóng dựa trên hướng va chạm
+        // ball.velocity.y += penetrationY * 0.01f; // Tăng tốc độ theo hướng x
+		// ball.velocity.y = 0.0f;
         
         // Có thể thay đổi hướng di chuyển của quả bóng tùy theo hướng va chạm
         // Ví dụ: nếu va chạm từ phía trên hoặc dưới, thay đổi hướng di chuyển theo y
@@ -383,7 +460,7 @@ Contact CheckWallCollision(Ball const& ball)
 	if (ballLeft < 0.0f)
 	{
 		contact.type = CollisionType::Left;
-	}
+	}	
 	else if (ballRight > WINDOW_WIDTH)
 	{
 		contact.type = CollisionType::Right;
@@ -572,8 +649,6 @@ int main(int argc, char *argv[]){
 		HandlePlayerCollision(playerOne, playerTwo);
 
 		// Xử lý va chạm giữa người chơi và quả bóng
-		HandlePlayerBallCollision(playerOne, ball);
-		HandlePlayerBallCollision(playerTwo, ball);
 
 
 		playerOne.Update(dt);
@@ -588,14 +663,85 @@ int main(int argc, char *argv[]){
 		if (Contact contact = CheckPlayerCollision(ball, playerOne);
 			contact.type != CollisionType::None)
 		{
-			ball.CollideWithPlayer(contact, playerOne);
+			float ballLeft = ball.position.x;
+			float ballRight = ball.position.x + BALL_WIDTH;
+			float ballTop = ball.position.y;
+			float ballBottom = ball.position.y + BALL_HEIGHT;
 
+			float playerLeft = playerOne.position.x ;
+			float playerRight = playerOne.position.x + PLAYER_WIDTH;
+			float playerTop = playerOne.position.y;
+			float playerBottom = playerOne.position.y + PLAYER_HEIGHT;
+
+			float playerRangeUpper = playerBottom - (2.0f * PLAYER_HEIGHT / 3.0f);
+			float playerRangeMiddle = playerBottom - (PLAYER_HEIGHT / 3.0f);
+			
+			if((ballLeft < playerRight) && playerOne.velocity.x >= 0){
+				// if(contact.type == CollisionType::Top || contact.type == CollisionType::Bottom){
+				// 	ball.CollideWithPlayer(contact, playerOne);
+				// }
+				// else {
+				// 	ball.velocity.y = 0.0f;
+				// }
+				HandlePlayerBallCollision(playerOne, ball,0);
+				ball.CollideWithPlayer(contact, playerOne);
+					ball.velocity.x = -ball.velocity.x;
+
+				if(playerOne.velocity.x == 0.0f){
+					ball.velocity.x = -ball.velocity.x;
+				}
+			}
+			// else 
+			if((ballRight > playerLeft)&& playerOne.velocity.x <= 0){
+				// if(contact.type == CollisionType::Top || contact.type == CollisionType::Bottom){
+				// 	ball.CollideWithPlayer(contact, playerOne);
+				// }
+				// else {
+				// 	ball.velocity.y = 0.0f;
+				// }
+				HandlePlayerBallCollision(playerOne, ball,0);
+				if(playerOne.velocity.x == 0.0f){
+					ball.velocity.x = -ball.velocity.x;
+				}ball.CollideWithPlayer(contact, playerOne);
+			}
+			// if(contact.type == CollisionType::Top || contact.type == CollisionType::Bottom){
+			// 	ball.CollideWithPlayer(contact, playerOne);
+			// }
 		}
-		else if (contact = CheckPlayerCollision(ball, playerTwo);
+		else if (Contact contact = CheckPlayerCollision(ball, playerTwo);
 			contact.type != CollisionType::None)
 		{
-			ball.CollideWithPlayer(contact, playerTwo);
+			float ballLeft = ball.position.x;
+			float ballRight = ball.position.x + BALL_WIDTH;
+			float ballTop = ball.position.y;
+			float ballBottom = ball.position.y + BALL_HEIGHT;
 
+			float playerLeft = playerTwo.position.x ;
+			float playerRight = playerTwo.position.x + PLAYER_WIDTH;
+			float playerTop = playerTwo.position.y;
+			float playerBottom = playerTwo.position.y + PLAYER_HEIGHT;
+
+			float playerRangeUpper = playerBottom - (2.0f * PLAYER_HEIGHT / 3.0f);
+			float playerRangeMiddle = playerBottom - (PLAYER_HEIGHT / 3.0f);
+
+			if((ballLeft <= playerRight) && playerTwo.velocity.x >= 0){
+				HandlePlayerBallCollision(playerTwo, ball,1);
+				ball.CollideWithPlayer(contact, playerTwo);
+				if(playerTwo.velocity.x == 0.0f){
+					ball.velocity.x = -ball.velocity.x;
+				}
+			}
+			// else 
+			if((ballRight >= playerLeft) && playerTwo.velocity.x <= 0){
+				ball.CollideWithPlayer(contact, playerTwo);
+				HandlePlayerBallCollision(playerTwo, ball,0);
+				if(playerTwo.velocity.x == 0.0f){
+					ball.velocity.x = -ball.velocity.x;
+				}
+			}
+			// if(contact.type == CollisionType::Top || contact.type == CollisionType::Bottom){
+			// 	ball.CollideWithPlayer(contact, playerTwo);
+			// }
 		}
 		else if (contact = CheckWallCollision(ball);
 			contact.type != CollisionType::None)
